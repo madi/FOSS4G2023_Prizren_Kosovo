@@ -47,4 +47,4 @@
 |  Digital Earth Australia                                         | <https://www.dea.ga.gov.au>                                   |
 |  Digital Earth Africa                                            | <https://www.digitalearthafrica.org>                          |
 
-  : Data providers.
+**Table 1.** Data providers. They make EO datasets available within infrastructures.
