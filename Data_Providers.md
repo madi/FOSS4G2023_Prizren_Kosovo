@@ -1,3 +1,5 @@
+**Table 1.** Data providers. They make EO datasets available within infrastructures.
+
 |  **Name**                                                        | **URL**                                                       |
 |  --------------------------------------------------------------- | ------------------------------------------------------------- |
 | Arctic and Antarctic Data Archive System                         | <https://ads.nipr.ac.jp>                                      |
@@ -47,4 +49,4 @@
 |  Digital Earth Australia                                         | <https://www.dea.ga.gov.au>                                   |
 |  Digital Earth Africa                                            | <https://www.digitalearthafrica.org>                          |
 
-**Table 1.** Data providers. They make EO datasets available within infrastructures.
+
