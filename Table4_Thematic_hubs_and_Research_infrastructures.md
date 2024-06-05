@@ -1,4 +1,4 @@
-**Table 4.** They incorporate EO data relevant to specific thematic domains, such as agriculture, biodiversity and atmosphere.
+**Table 4.** Thematic hubs and research infrastructures. They incorporate EO data relevant to specific thematic domains, such as agriculture, biodiversity and atmosphere.
 
 |  **Name**                                                              | **URL**
 |  --------------------------------------------------------------------- |---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
