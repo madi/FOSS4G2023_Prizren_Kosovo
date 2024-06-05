@@ -4,7 +4,7 @@
 
 * Link to the [presentation](https://github.com/madi/FOSS4G2023_Prizren_Kosovo/blob/main/Presentation_DiLeo.pdf) given at FOSS4G 2023 in Prizren, Kosovo.
 
-## Tables:
+## Tables
 
 * [Table 1. Data providers](https://github.com/madi/FOSS4G2023_Prizren_Kosovo/blob/main/Table1_Data_Providers.md): they make EO datasets available within
     infrastructures;
@@ -20,3 +20,7 @@
 * [Table 6. Virtual infrastructures](https://github.com/madi/FOSS4G2023_Prizren_Kosovo/blob/main/Table6_Virtual_infrastructures.md): they place additional layers on top of existing platforms with the goal to facilitate data access and increase the discoverability of and interoperability between such platforms;
 
 * [Table 7. Initiatives and programmes](https://github.com/madi/FOSS4G2023_Prizren_Kosovo/blob/main/Table7_Initiatives_and_programmes.md): EO-related, publicly funded programmes.
+
+## How to contribute
+
+The lists of platforms that we identified is by no means exhaustive. If you think we missed something, please, make a pull request.
