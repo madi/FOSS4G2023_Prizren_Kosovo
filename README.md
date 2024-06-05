@@ -1,6 +1,8 @@
 # Digital Earth Observation infrastructures and initiatives: a review framework based on open principles
 
-Link to original [paper](https://isprs-archives.copernicus.org/articles/XLVIII-4-W7-2023/33/2023/).
+* Link to original [paper](https://isprs-archives.copernicus.org/articles/XLVIII-4-W7-2023/33/2023/).
+
+* Link to the [presentation](https://github.com/madi/FOSS4G2023_Prizren_Kosovo/blob/main/Presentation_DiLeo.pdf) given at FOSS4G 2023 in Prizren, Kosovo.
 
 ## Tables:
 
@@ -17,4 +19,4 @@ Link to original [paper](https://isprs-archives.copernicus.org/articles/XLVIII-4
 
 * [Table 6. Virtual infrastructures](https://github.com/madi/FOSS4G2023_Prizren_Kosovo/blob/main/Table6_Virtual_infrastructures.md): they place additional layers on top of existing platforms with the goal to facilitate data access and increase the discoverability of and interoperability between such platforms;
 
-* [Table 7. Initiatives and programmes](): EO-related, publicly funded programmes.
+* [Table 7. Initiatives and programmes](https://github.com/madi/FOSS4G2023_Prizren_Kosovo/blob/main/Table7_Initiatives_and_programmes.md): EO-related, publicly funded programmes.
