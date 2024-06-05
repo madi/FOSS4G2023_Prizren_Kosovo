@@ -1,4 +1,4 @@
-**Table 5.** They implement a multidimensional array structure, on which one can load several bands and perform slicing and algebraic operations.
+**Table 5.** Data cubes. They implement a multidimensional array structure, on which one can load several bands and perform slicing and algebraic operations.
 
 |  **Name**                        | **URL**
 |  ------------------------------- | ------------------------------------------------------------------
