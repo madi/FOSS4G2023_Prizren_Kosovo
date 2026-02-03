@@ -1,5 +1,7 @@
 # Digital Earth Observation infrastructures and initiatives: a review framework based on open principles
 
+* [Taxonomy](https://github.com/madi/FOSS4G2023_Prizren_Kosovo/blob/main/Eo_taxonomy.html) of Digital Earth Observation Infrastructures & Initiatives 
+
 * Link to original [paper](https://isprs-archives.copernicus.org/articles/XLVIII-4-W7-2023/33/2023/).
 
 * Link to the [presentation](https://github.com/madi/FOSS4G2023_Prizren_Kosovo/blob/main/Presentation_DiLeo.pdf) given at FOSS4G 2023 in Prizren, Kosovo.
