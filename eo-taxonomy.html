@@ -1,0 +1,879 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Digital EO Infrastructure Taxonomy</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0e17;
+    --surface: #111827;
+    --surface-hover: #1a2235;
+    --border: #1e293b;
+    --text: #e2e8f0;
+    --text-muted: #94a3b8;
+    --accent-data: #22d3ee;
+    --accent-data-bg: rgba(34,211,238,0.08);
+    --accent-cloud: #a78bfa;
+    --accent-cloud-bg: rgba(167,139,250,0.08);
+    --accent-broker: #fbbf24;
+    --accent-broker-bg: rgba(251,191,36,0.08);
+    --accent-thematic: #34d399;
+    --accent-thematic-bg: rgba(52,211,153,0.08);
+    --accent-cube: #f472b6;
+    --accent-cube-bg: rgba(244,114,182,0.08);
+    --accent-virtual: #fb923c;
+    --accent-virtual-bg: rgba(251,146,60,0.08);
+    --accent-initiative: #94a3b8;
+    --accent-initiative-bg: rgba(148,163,184,0.06);
+    --card-radius: 14px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ── Grain overlay ── */
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.035;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    z-index: 9999;
+  }
+
+  /* ── Header ── */
+  .header {
+    text-align: center;
+    padding: 60px 24px 20px;
+    position: relative;
+  }
+  .header::before {
+    content: '';
+    position: absolute;
+    top: -120px; left: 50%; transform: translateX(-50%);
+    width: 600px; height: 400px;
+    background: radial-gradient(ellipse, rgba(34,211,238,0.08) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .header .label {
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--accent-data);
+    margin-bottom: 16px;
+    font-weight: 500;
+  }
+  .header h1 {
+    font-family: 'Instrument Serif', serif;
+    font-size: clamp(32px, 5vw, 56px);
+    font-weight: 400;
+    line-height: 1.15;
+    color: #fff;
+    max-width: 800px;
+    margin: 0 auto 16px;
+  }
+  .header h1 em {
+    font-style: italic;
+    color: var(--accent-data);
+  }
+  .header p {
+    color: var(--text-muted);
+    font-size: 15px;
+    max-width: 640px;
+    margin: 0 auto;
+    line-height: 1.6;
+  }
+  .header .source {
+    margin-top: 14px;
+    font-size: 12px;
+    color: var(--text-muted);
+    opacity: 0.6;
+  }
+
+  /* ── Hierarchy diagram ── */
+  .hierarchy-section {
+    max-width: 1100px;
+    margin: 40px auto 50px;
+    padding: 0 24px;
+  }
+  .hierarchy-section h2 {
+    font-family: 'Instrument Serif', serif;
+    font-size: 26px;
+    font-weight: 400;
+    margin-bottom: 8px;
+    color: #fff;
+  }
+  .hierarchy-section > p {
+    color: var(--text-muted);
+    font-size: 14px;
+    margin-bottom: 28px;
+    line-height: 1.5;
+  }
+
+  .hierarchy-diagram {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    align-items: center;
+  }
+
+  /* Top overarching bar */
+  .hier-top {
+    width: 100%;
+    background: var(--accent-initiative-bg);
+    border: 1px solid rgba(148,163,184,0.15);
+    border-radius: var(--card-radius);
+    padding: 16px 24px;
+    text-align: center;
+    position: relative;
+  }
+  .hier-top .tag {
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--accent-initiative);
+    margin-bottom: 4px;
+  }
+  .hier-top .name {
+    font-family: 'Instrument Serif', serif;
+    font-size: 20px;
+    color: #fff;
+  }
+
+  .hier-connector {
+    width: 2px;
+    height: 28px;
+    background: linear-gradient(to bottom, var(--border), transparent);
+  }
+
+  /* Foundation row */
+  .hier-foundation {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    gap: 0;
+    align-items: center;
+    width: 100%;
+  }
+  .hier-foundation-card {
+    border-radius: var(--card-radius);
+    padding: 20px 24px;
+    text-align: center;
+  }
+  .hier-foundation-card.data {
+    background: var(--accent-data-bg);
+    border: 1px solid rgba(34,211,238,0.18);
+  }
+  .hier-foundation-card.cloud {
+    background: var(--accent-cloud-bg);
+    border: 1px solid rgba(167,139,250,0.18);
+  }
+  .hier-foundation-card .tag {
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+  .hier-foundation-card.data .tag { color: var(--accent-data); }
+  .hier-foundation-card.cloud .tag { color: var(--accent-cloud); }
+  .hier-foundation-card .name {
+    font-family: 'Instrument Serif', serif;
+    font-size: 18px;
+    color: #fff;
+  }
+  .hier-foundation-card .count {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-top: 4px;
+  }
+  .hier-arrow {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--text-muted);
+    font-size: 12px;
+    padding: 0 16px;
+    white-space: nowrap;
+  }
+  .hier-arrow svg { flex-shrink: 0; }
+
+  /* Derived row */
+  .hier-connector-wide {
+    width: 60%;
+    height: 2px;
+    background: var(--border);
+    position: relative;
+    margin: 0 auto;
+  }
+  .hier-connector-wide::before,
+  .hier-connector-wide::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    width: 2px;
+    height: 24px;
+    background: var(--border);
+  }
+  .hier-connector-wide::before { left: 0; }
+  .hier-connector-wide::after { right: 0; }
+
+  .hier-branches {
+    display: flex;
+    justify-content: center;
+    width: 60%;
+    margin: 24px auto 0;
+  }
+  .hier-branch-connectors {
+    display: flex;
+    justify-content: space-between;
+    width: 60%;
+    margin: 0 auto;
+  }
+  .hier-branch-connectors .vert {
+    width: 2px;
+    height: 20px;
+    background: var(--border);
+  }
+
+  .hier-derived {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    width: 100%;
+    margin-top: 20px;
+  }
+  .hier-derived-card {
+    border-radius: var(--card-radius);
+    padding: 16px 18px;
+    text-align: center;
+  }
+  .hier-derived-card .tag {
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+  .hier-derived-card .name {
+    font-family: 'Instrument Serif', serif;
+    font-size: 16px;
+    color: #fff;
+  }
+  .hier-derived-card .count {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-top: 3px;
+  }
+  .hier-derived-card.broker {
+    background: var(--accent-broker-bg);
+    border: 1px solid rgba(251,191,36,0.15);
+  }
+  .hier-derived-card.broker .tag { color: var(--accent-broker); }
+  .hier-derived-card.cube {
+    background: var(--accent-cube-bg);
+    border: 1px solid rgba(244,114,182,0.15);
+  }
+  .hier-derived-card.cube .tag { color: var(--accent-cube); }
+  .hier-derived-card.virtual {
+    background: var(--accent-virtual-bg);
+    border: 1px solid rgba(251,146,60,0.15);
+  }
+  .hier-derived-card.virtual .tag { color: var(--accent-virtual); }
+  .hier-derived-card.thematic {
+    background: var(--accent-thematic-bg);
+    border: 1px solid rgba(52,211,153,0.15);
+  }
+  .hier-derived-card.thematic .tag { color: var(--accent-thematic); }
+
+  .aspect-legend {
+    display: flex;
+    gap: 24px;
+    justify-content: center;
+    margin-top: 28px;
+    flex-wrap: wrap;
+  }
+  .aspect-legend-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    color: var(--text-muted);
+  }
+  .aspect-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+  }
+
+  /* ── Category detail sections ── */
+  .categories-section {
+    max-width: 1100px;
+    margin: 0 auto 60px;
+    padding: 0 24px;
+  }
+  .categories-section h2 {
+    font-family: 'Instrument Serif', serif;
+    font-size: 26px;
+    font-weight: 400;
+    margin-bottom: 8px;
+    color: #fff;
+  }
+  .categories-section > p {
+    color: var(--text-muted);
+    font-size: 14px;
+    margin-bottom: 32px;
+    line-height: 1.5;
+  }
+
+  .cat-group {
+    margin-bottom: 36px;
+  }
+  .cat-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 14px;
+    cursor: pointer;
+    user-select: none;
+  }
+  .cat-icon {
+    width: 42px;
+    height: 42px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    flex-shrink: 0;
+  }
+  .cat-header-text h3 {
+    font-family: 'Instrument Serif', serif;
+    font-size: 20px;
+    font-weight: 400;
+    color: #fff;
+  }
+  .cat-header-text .desc {
+    font-size: 13px;
+    color: var(--text-muted);
+    line-height: 1.45;
+    margin-top: 2px;
+  }
+  .cat-badge {
+    font-size: 11px;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 100px;
+    margin-left: auto;
+    flex-shrink: 0;
+  }
+  .cat-toggle {
+    width: 24px;
+    height: 24px;
+    flex-shrink: 0;
+    transition: transform 0.3s;
+    color: var(--text-muted);
+  }
+  .cat-group.open .cat-toggle {
+    transform: rotate(180deg);
+  }
+
+  .cat-grid {
+    display: none;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 8px;
+    padding-left: 56px;
+  }
+  .cat-group.open .cat-grid {
+    display: grid;
+  }
+  .cat-item {
+    padding: 12px 16px;
+    border-radius: 10px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    transition: background 0.2s, border-color 0.2s;
+    overflow: hidden;
+  }
+  .cat-item:hover {
+    background: var(--surface-hover);
+  }
+  .cat-item .item-name {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .cat-item .item-url {
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-top: 3px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    opacity: 0.6;
+  }
+
+  /* Category-specific colors */
+  .cat-data .cat-icon { background: var(--accent-data-bg); color: var(--accent-data); border: 1px solid rgba(34,211,238,0.2); }
+  .cat-data .cat-badge { background: var(--accent-data-bg); color: var(--accent-data); }
+  .cat-data .cat-item:hover { border-color: rgba(34,211,238,0.2); }
+
+  .cat-cloud .cat-icon { background: var(--accent-cloud-bg); color: var(--accent-cloud); border: 1px solid rgba(167,139,250,0.2); }
+  .cat-cloud .cat-badge { background: var(--accent-cloud-bg); color: var(--accent-cloud); }
+  .cat-cloud .cat-item:hover { border-color: rgba(167,139,250,0.2); }
+
+  .cat-broker .cat-icon { background: var(--accent-broker-bg); color: var(--accent-broker); border: 1px solid rgba(251,191,36,0.2); }
+  .cat-broker .cat-badge { background: var(--accent-broker-bg); color: var(--accent-broker); }
+  .cat-broker .cat-item:hover { border-color: rgba(251,191,36,0.2); }
+
+  .cat-thematic .cat-icon { background: var(--accent-thematic-bg); color: var(--accent-thematic); border: 1px solid rgba(52,211,153,0.2); }
+  .cat-thematic .cat-badge { background: var(--accent-thematic-bg); color: var(--accent-thematic); }
+  .cat-thematic .cat-item:hover { border-color: rgba(52,211,153,0.2); }
+
+  .cat-cube .cat-icon { background: var(--accent-cube-bg); color: var(--accent-cube); border: 1px solid rgba(244,114,182,0.2); }
+  .cat-cube .cat-badge { background: var(--accent-cube-bg); color: var(--accent-cube); }
+  .cat-cube .cat-item:hover { border-color: rgba(244,114,182,0.2); }
+
+  .cat-virtual .cat-icon { background: var(--accent-virtual-bg); color: var(--accent-virtual); border: 1px solid rgba(251,146,60,0.2); }
+  .cat-virtual .cat-badge { background: var(--accent-virtual-bg); color: var(--accent-virtual); }
+  .cat-virtual .cat-item:hover { border-color: rgba(251,146,60,0.2); }
+
+  .cat-initiative .cat-icon { background: var(--accent-initiative-bg); color: var(--accent-initiative); border: 1px solid rgba(148,163,184,0.15); }
+  .cat-initiative .cat-badge { background: var(--accent-initiative-bg); color: var(--accent-initiative); }
+  .cat-initiative .cat-item:hover { border-color: rgba(148,163,184,0.2); }
+
+  /* ── Limitations & Enablers ── */
+  .bottom-grid {
+    max-width: 1100px;
+    margin: 0 auto 60px;
+    padding: 0 24px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+  }
+  @media (max-width: 768px) {
+    .bottom-grid { grid-template-columns: 1fr; }
+    .hier-foundation { grid-template-columns: 1fr; gap: 10px; }
+    .hier-arrow { transform: rotate(90deg); justify-content: center; }
+    .hier-derived { grid-template-columns: 1fr 1fr; }
+    .cat-grid { padding-left: 0; }
+  }
+
+  .panel {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--card-radius);
+    padding: 28px;
+  }
+  .panel h3 {
+    font-family: 'Instrument Serif', serif;
+    font-size: 20px;
+    font-weight: 400;
+    color: #fff;
+    margin-bottom: 18px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .panel h3 .emoji { font-size: 22px; }
+  .panel-item {
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 13px;
+    line-height: 1.55;
+    color: var(--text-muted);
+  }
+  .panel-item:last-child { border-bottom: none; }
+  .panel-item strong {
+    color: var(--text);
+    font-weight: 500;
+  }
+  .enabler-tag {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 4px;
+    margin-right: 6px;
+    background: rgba(34,211,238,0.1);
+    color: var(--accent-data);
+  }
+
+  /* Animations */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(18px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .animate-in {
+    animation: fadeUp 0.6s ease both;
+  }
+  .delay-1 { animation-delay: 0.08s; }
+  .delay-2 { animation-delay: 0.16s; }
+  .delay-3 { animation-delay: 0.24s; }
+  .delay-4 { animation-delay: 0.32s; }
+</style>
+</head>
+<body>
+
+<!-- Header -->
+<div class="header animate-in">
+  <div class="label">Taxonomy · 150+ Platforms Reviewed</div>
+  <h1>Digital Earth Observation <em>Infrastructures</em> &amp; Initiatives</h1>
+  <p>A classification of the fragmented landscape of EO platforms, organized by function — from raw data providers to overarching policy programmes.</p>
+  <div class="source">Based on Di Leo et al. (2023) — ISPRS Archives, FOSS4G 2023</div>
+</div>
+
+<!-- Hierarchy Diagram -->
+<section class="hierarchy-section animate-in delay-1">
+  <h2>Platform Hierarchy</h2>
+  <p>The two foundational layers — Data Providers and Cloud Platforms — enable all other segments of the EO infrastructure landscape.</p>
+
+  <div class="hierarchy-diagram">
+    <!-- Overarching -->
+    <div class="hier-top">
+      <div class="tag">Overarching</div>
+      <div class="name">Initiatives &amp; Programmes</div>
+    </div>
+    <div class="hier-connector"></div>
+
+    <!-- Foundation -->
+    <div class="hier-foundation">
+      <div class="hier-foundation-card data">
+        <div class="tag">Data</div>
+        <div class="name">Data Providers</div>
+        <div class="count">40+ platforms</div>
+      </div>
+      <div class="hier-arrow">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 8h10M10 5l3 3-3 3"/></svg>
+        technology
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 8h10M10 5l3 3-3 3"/></svg>
+      </div>
+      <div class="hier-foundation-card cloud">
+        <div class="tag">Computing</div>
+        <div class="name">Cloud Platforms</div>
+        <div class="count">15 platforms</div>
+      </div>
+    </div>
+
+    <div style="height: 28px; display: flex; justify-content: center;">
+      <div style="width: 2px; height: 100%; background: var(--border);"></div>
+    </div>
+
+    <!-- Derived categories -->
+    <div class="hier-derived">
+      <div class="hier-derived-card broker">
+        <div class="tag">Discovery</div>
+        <div class="name">Brokers &amp; Catalogues</div>
+        <div class="count">20+ entries</div>
+      </div>
+      <div class="hier-derived-card cube">
+        <div class="tag">Analysis</div>
+        <div class="name">Data Cubes</div>
+        <div class="count">13 entries</div>
+      </div>
+      <div class="hier-derived-card virtual">
+        <div class="tag">Federation</div>
+        <div class="name">Virtual Infra.</div>
+        <div class="count">16 entries</div>
+      </div>
+      <div class="hier-derived-card thematic">
+        <div class="tag">Domain</div>
+        <div class="name">Thematic Hubs</div>
+        <div class="count">30+ entries</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="aspect-legend">
+    <div class="aspect-legend-item"><div class="aspect-dot" style="background:var(--accent-data)"></div> Data aspect</div>
+    <div class="aspect-legend-item"><div class="aspect-dot" style="background:var(--accent-cloud)"></div> Infrastructure &amp; Technology</div>
+    <div class="aspect-legend-item"><div class="aspect-dot" style="background:var(--accent-thematic)"></div> Domain-specific</div>
+    <div class="aspect-legend-item"><div class="aspect-dot" style="background:var(--accent-initiative)"></div> Programmes (overarching)</div>
+  </div>
+</section>
+
+<!-- Detailed Category Lists -->
+<section class="categories-section animate-in delay-2">
+  <h2>Classified Platforms</h2>
+  <p>Click each category to expand the full list of platforms identified in the review.</p>
+
+  <!-- Data Providers -->
+  <div class="cat-group cat-data" onclick="this.classList.toggle('open')">
+    <div class="cat-header">
+      <div class="cat-icon">🛰</div>
+      <div class="cat-header-text">
+        <h3>Data Providers</h3>
+        <div class="desc">Platforms whose primary service is discovery and access to EO datasets</div>
+      </div>
+      <div class="cat-badge">40+</div>
+      <svg class="cat-toggle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+    </div>
+    <div class="cat-grid">
+      <div class="cat-item"><div class="item-name">Copernicus Open Access Hub</div><div class="item-url">scihub.copernicus.eu</div></div>
+      <div class="cat-item"><div class="item-name">Copernicus Atmosphere (CAMS)</div><div class="item-url">atmosphere.copernicus.eu</div></div>
+      <div class="cat-item"><div class="item-name">Copernicus Marine Service</div><div class="item-url">marine.copernicus.eu</div></div>
+      <div class="cat-item"><div class="item-name">Copernicus Climate (C3S)</div><div class="item-url">climate.copernicus.eu</div></div>
+      <div class="cat-item"><div class="item-name">Copernicus Land Service</div><div class="item-url">land.copernicus.eu</div></div>
+      <div class="cat-item"><div class="item-name">Copernicus Emergency</div><div class="item-url">emergency.copernicus.eu</div></div>
+      <div class="cat-item"><div class="item-name">Copernicus Security</div><div class="item-url">copernicus.eu</div></div>
+      <div class="cat-item"><div class="item-name">NASA EarthData</div><div class="item-url">earthdata.nasa.gov</div></div>
+      <div class="cat-item"><div class="item-name">ESA Earth Online</div><div class="item-url">earth.esa.int</div></div>
+      <div class="cat-item"><div class="item-name">ESA Validation Data Centre</div><div class="item-url">evdc.esa.int</div></div>
+      <div class="cat-item"><div class="item-name">Planet</div><div class="item-url">planet.com</div></div>
+      <div class="cat-item"><div class="item-name">MAXAR ARD</div><div class="item-url">maxar.com</div></div>
+      <div class="cat-item"><div class="item-name">EUMETCast</div><div class="item-url">eumetsat.int</div></div>
+      <div class="cat-item"><div class="item-name">Digital Earth Australia</div><div class="item-url">dea.ga.gov.au</div></div>
+      <div class="cat-item"><div class="item-name">Digital Earth Africa</div><div class="item-url">digitalearthafrica.org</div></div>
+      <div class="cat-item"><div class="item-name">GBIF</div><div class="item-url">gbif.org</div></div>
+      <div class="cat-item"><div class="item-name">OpenStreetMap</div><div class="item-url">openstreetmap.org</div></div>
+      <div class="cat-item"><div class="item-name">CEOS CWIC</div><div class="item-url">ceos.org</div></div>
+      <div class="cat-item"><div class="item-name">German Aerospace Center</div><div class="item-url">dlr.de</div></div>
+      <div class="cat-item"><div class="item-name">ISRO</div><div class="item-url">isro.gov.in</div></div>
+      <div class="cat-item"><div class="item-name">ArcGIS Living Atlas</div><div class="item-url">livingatlas.arcgis.com</div></div>
+      <div class="cat-item"><div class="item-name">JRC Data</div><div class="item-url">data.jrc.ec.europa.eu</div></div>
+      <div class="cat-item"><div class="item-name">Natural Earth</div><div class="item-url">naturalearthdata.com</div></div>
+      <div class="cat-item"><div class="item-name">OneGeology</div><div class="item-url">onegeology.org</div></div>
+      <div class="cat-item"><div class="item-name">EUBUCCO</div><div class="item-url">eubucco.com</div></div>
+      <div class="cat-item"><div class="item-name">MS Building Footprints</div><div class="item-url">github.com/microsoft</div></div>
+      <div class="cat-item"><div class="item-name">OpenGeoHub</div><div class="item-url">opengeohub.org</div></div>
+      <div class="cat-item"><div class="item-name">Protected Planet</div><div class="item-url">protectedplanet.net</div></div>
+      <div class="cat-item"><div class="item-name">Arctic & Antarctic DAS</div><div class="item-url">ads.nipr.ac.jp</div></div>
+      <div class="cat-item"><div class="item-name">JAMSTEC</div><div class="item-url">jamstec.go.jp</div></div>
+      <div class="cat-item"><div class="item-name">Argo Floats Network</div><div class="item-url">argo.ucsd.edu</div></div>
+    </div>
+  </div>
+
+  <!-- Cloud-based Geoprocessing -->
+  <div class="cat-group cat-cloud" onclick="this.classList.toggle('open')">
+    <div class="cat-header">
+      <div class="cat-icon">☁️</div>
+      <div class="cat-header-text">
+        <h3>Cloud-based Geoprocessing Platforms</h3>
+        <div class="desc">Computational environments for processing EO data in the cloud — "bring the user to the data"</div>
+      </div>
+      <div class="cat-badge">15</div>
+      <svg class="cat-toggle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+    </div>
+    <div class="cat-grid">
+      <div class="cat-item"><div class="item-name">Google Earth Engine</div><div class="item-url">earthengine.google.com</div></div>
+      <div class="cat-item"><div class="item-name">Microsoft Planetary Computer</div><div class="item-url">planetarycomputer.microsoft.com</div></div>
+      <div class="cat-item"><div class="item-name">Earth on AWS</div><div class="item-url">aws.amazon.com/earth</div></div>
+      <div class="cat-item"><div class="item-name">CreoDIAS</div><div class="item-url">creodias.eu</div></div>
+      <div class="cat-item"><div class="item-name">WEkEO</div><div class="item-url">wekeo.eu</div></div>
+      <div class="cat-item"><div class="item-name">OpenEO Platform</div><div class="item-url">openeo.cloud</div></div>
+      <div class="cat-item"><div class="item-name">Actinia Mundialis</div><div class="item-url">actinia.mundialis.de</div></div>
+      <div class="cat-item"><div class="item-name">EOSC Hub</div><div class="item-url">eosc-hub.eu</div></div>
+      <div class="cat-item"><div class="item-name">European Weather Cloud</div><div class="item-url">europeanweather.cloud</div></div>
+      <div class="cat-item"><div class="item-name">EODC</div><div class="item-url">eodc.eu</div></div>
+      <div class="cat-item"><div class="item-name">Terradue</div><div class="item-url">terradue.com</div></div>
+      <div class="cat-item"><div class="item-name">SEPAL</div><div class="item-url">sepal.io</div></div>
+      <div class="cat-item"><div class="item-name">TerraScope</div><div class="item-url">terrascope.be</div></div>
+      <div class="cat-item"><div class="item-name">EOX</div><div class="item-url">eox.at</div></div>
+      <div class="cat-item"><div class="item-name">ADAM Platform</div><div class="item-url">adamplatform.eu</div></div>
+    </div>
+  </div>
+
+  <!-- Brokers & Catalogues -->
+  <div class="cat-group cat-broker" onclick="this.classList.toggle('open')">
+    <div class="cat-header">
+      <div class="cat-icon">🔍</div>
+      <div class="cat-header-text">
+        <h3>Brokers &amp; Catalogues</h3>
+        <div class="desc">Discovery services brokering metadata from existing data providers into a single entry point</div>
+      </div>
+      <div class="cat-badge">20+</div>
+      <svg class="cat-toggle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+    </div>
+    <div class="cat-grid">
+      <div class="cat-item"><div class="item-name">GEOSS Portal</div><div class="item-url">geoportal.org</div></div>
+      <div class="cat-item"><div class="item-name">INSPIRE Geoportal</div><div class="item-url">inspire-geoportal.ec.europa.eu</div></div>
+      <div class="cat-item"><div class="item-name">STACIndex</div><div class="item-url">stacindex.org</div></div>
+      <div class="cat-item"><div class="item-name">NextGEOSS Catalogue</div><div class="item-url">catalogue.nextgeoss.eu</div></div>
+      <div class="cat-item"><div class="item-name">EEA Data Catalogue</div><div class="item-url">sdi.eea.europa.eu</div></div>
+      <div class="cat-item"><div class="item-name">GEO Knowledge Hub</div><div class="item-url">gkhub.earthobservations.org</div></div>
+      <div class="cat-item"><div class="item-name">EU Open Data Portal</div><div class="item-url">data.europa.eu</div></div>
+      <div class="cat-item"><div class="item-name">FedEO (CEOS)</div><div class="item-url">fedeo-client.ceos.org</div></div>
+      <div class="cat-item"><div class="item-name">CEOS IDN</div><div class="item-url">idn.ceos.org</div></div>
+      <div class="cat-item"><div class="item-name">PANDA (Copernicus)</div><div class="item-url">panda.copernicus.eu</div></div>
+      <div class="cat-item"><div class="item-name">World Bank Data Catalog</div><div class="item-url">datacatalog.worldbank.org</div></div>
+      <div class="cat-item"><div class="item-name">ISRIC World Soil Info</div><div class="item-url">isric.org</div></div>
+      <div class="cat-item"><div class="item-name">UN-SPIDER</div><div class="item-url">un-spider.org</div></div>
+      <div class="cat-item"><div class="item-name">Climate-ADAPT</div><div class="item-url">climate-adapt.eea.europa.eu</div></div>
+      <div class="cat-item"><div class="item-name">EEA Indicators</div><div class="item-url">eea.europa.eu/ims</div></div>
+      <div class="cat-item"><div class="item-name">Geo-Cradle</div><div class="item-url">geocradle.eu</div></div>
+      <div class="cat-item"><div class="item-name">BEYOND</div><div class="item-url">beyond-eocenter.eu</div></div>
+      <div class="cat-item"><div class="item-name">IAEA Environment Labs</div><div class="item-url">iaea.org</div></div>
+      <div class="cat-item"><div class="item-name">ICIMOD</div><div class="item-url">icimod.org</div></div>
+      <div class="cat-item"><div class="item-name">Ecopotential In-Situ</div><div class="item-url">ecopotential-project.eu</div></div>
+    </div>
+  </div>
+
+  <!-- Thematic Hubs -->
+  <div class="cat-group cat-thematic" onclick="this.classList.toggle('open')">
+    <div class="cat-header">
+      <div class="cat-icon">🌿</div>
+      <div class="cat-header-text">
+        <h3>Thematic Hubs &amp; Research Infrastructures</h3>
+        <div class="desc">Domain-specific facilities providing resources and services for research communities</div>
+      </div>
+      <div class="cat-badge">30+</div>
+      <svg class="cat-toggle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+    </div>
+    <div class="cat-grid">
+      <div class="cat-item"><div class="item-name">ESA TEPs (Urban, Coastal, Forest…)</div><div class="item-url">urban-tep.eu / coastal-tep.eu / …</div></div>
+      <div class="cat-item"><div class="item-name">EPOS</div><div class="item-url">epos-eu.org</div></div>
+      <div class="cat-item"><div class="item-name">Eionet</div><div class="item-url">eionet.europa.eu</div></div>
+      <div class="cat-item"><div class="item-name">Gaiasense</div><div class="item-url">gaiasense.gr</div></div>
+      <div class="cat-item"><div class="item-name">eLTER</div><div class="item-url">elter-ri.eu</div></div>
+      <div class="cat-item"><div class="item-name">TWIGA</div><div class="item-url">website.twiga-h2020.eu</div></div>
+      <div class="cat-item"><div class="item-name">LifeWatch ERIC</div><div class="item-url">lifewatch.eu</div></div>
+      <div class="cat-item"><div class="item-name">ANAEE</div><div class="item-url">anaee.eu</div></div>
+      <div class="cat-item"><div class="item-name">ACTRIS</div><div class="item-url">actris.eu</div></div>
+      <div class="cat-item"><div class="item-name">GRID-Geneva (UNEP)</div><div class="item-url">unepgrid.ch</div></div>
+      <div class="cat-item"><div class="item-name">VITO</div><div class="item-url">vito.be</div></div>
+      <div class="cat-item"><div class="item-name">HydroShare</div><div class="item-url">help.hydroshare.org</div></div>
+      <div class="cat-item"><div class="item-name">CUAHSI</div><div class="item-url">cuahsi.org</div></div>
+      <div class="cat-item"><div class="item-name">EOMAP</div><div class="item-url">eomap.com</div></div>
+      <div class="cat-item"><div class="item-name">Open Foris</div><div class="item-url">openforis.org</div></div>
+      <div class="cat-item"><div class="item-name">TAHMO</div><div class="item-url">tahmo.org</div></div>
+      <div class="cat-item"><div class="item-name">Biopama RIS</div><div class="item-url">rris.biopama.org</div></div>
+      <div class="cat-item"><div class="item-name">GROW Observatory</div><div class="item-url">growobservatory.org</div></div>
+      <div class="cat-item"><div class="item-name">AgriStack (India)</div><div class="item-url">pib.gov.in</div></div>
+      <div class="cat-item"><div class="item-name">AGdata-hub</div><div class="item-url">agdatahub.eu</div></div>
+      <div class="cat-item"><div class="item-name">WSL (Switzerland)</div><div class="item-url">wsl.ch</div></div>
+      <div class="cat-item"><div class="item-name">SMHI (Sweden)</div><div class="item-url">smhi.se</div></div>
+      <div class="cat-item"><div class="item-name">Recetox</div><div class="item-url">recetox.muni.cz</div></div>
+      <div class="cat-item"><div class="item-name">UNESCO IHP</div><div class="item-url">en.unesco.org</div></div>
+      <div class="cat-item"><div class="item-name">Webservice-Energy</div><div class="item-url">webservice-energy.org</div></div>
+      <div class="cat-item"><div class="item-name">WRI</div><div class="item-url">wri.org</div></div>
+    </div>
+  </div>
+
+  <!-- Data Cubes -->
+  <div class="cat-group cat-cube" onclick="this.classList.toggle('open')">
+    <div class="cat-header">
+      <div class="cat-icon">📐</div>
+      <div class="cat-header-text">
+        <h3>Data Cubes</h3>
+        <div class="desc">Multi-dimensional array structures for slicing, banding, and algebraic operations on EO data</div>
+      </div>
+      <div class="cat-badge">13</div>
+      <svg class="cat-toggle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+    </div>
+    <div class="cat-grid">
+      <div class="cat-item"><div class="item-name">FAIRiCube</div><div class="item-url">fairicube.nilu.no</div></div>
+      <div class="cat-item"><div class="item-name">ENVISION Data Cube</div><div class="item-url">envision-h2020.eu</div></div>
+      <div class="cat-item"><div class="item-name">Eco Data Cube</div><div class="item-url">ecodatacube.eu</div></div>
+      <div class="cat-item"><div class="item-name">Euro Data Cube</div><div class="item-url">eurodatacube.com</div></div>
+      <div class="cat-item"><div class="item-name">Open Data Cube</div><div class="item-url">opendatacube.org</div></div>
+      <div class="cat-item"><div class="item-name">Earth System Data Cube</div><div class="item-url">deepesdl.readthedocs.io</div></div>
+      <div class="cat-item"><div class="item-name">Swiss Data Cube</div><div class="item-url">swissdatacube.org</div></div>
+      <div class="cat-item"><div class="item-name">Austrian Data Cube</div><div class="item-url">acube.eodc.eu</div></div>
+      <div class="cat-item"><div class="item-name">EarthServer</div><div class="item-url">earthserver.eu</div></div>
+      <div class="cat-item"><div class="item-name">EarthCube</div><div class="item-url">earthcube.org</div></div>
+      <div class="cat-item"><div class="item-name">Harmonia</div><div class="item-url">harmonia-project.eu</div></div>
+      <div class="cat-item"><div class="item-name">AD4GD</div><div class="item-url">ad4gd.eu</div></div>
+      <div class="cat-item"><div class="item-name">B3 (B Cubed)</div><div class="item-url">cordis.europa.eu</div></div>
+    </div>
+  </div>
+
+  <!-- Virtual Infrastructures -->
+  <div class="cat-group cat-virtual" onclick="this.classList.toggle('open')">
+    <div class="cat-header">
+      <div class="cat-icon">🔗</div>
+      <div class="cat-header-text">
+        <h3>Virtual Infrastructures</h3>
+        <div class="desc">Federated layers interconnecting existing platforms to improve discoverability and interoperability</div>
+      </div>
+      <div class="cat-badge">16</div>
+      <svg class="cat-toggle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+    </div>
+    <div class="cat-grid">
+      <div class="cat-item"><div class="item-name">Gaia-X</div><div class="item-url">gaia-x.eu</div></div>
+      <div class="cat-item"><div class="item-name">EOEPCA</div><div class="item-url">eoepca.org</div></div>
+      <div class="cat-item"><div class="item-name">GEOSS Platform Plus</div><div class="item-url">geossplatformplus.com</div></div>
+      <div class="cat-item"><div class="item-name">Copernicus Data Space (CDSE)</div><div class="item-url">dataspace.copernicus.eu</div></div>
+      <div class="cat-item"><div class="item-name">Open Earth Monitor</div><div class="item-url">earthmonitor.org</div></div>
+      <div class="cat-item"><div class="item-name">Destination Earth</div><div class="item-url">digital-strategy.ec.europa.eu</div></div>
+      <div class="cat-item"><div class="item-name">GREAT Project</div><div class="item-url">greatproject.eu</div></div>
+      <div class="cat-item"><div class="item-name">USAGE Project</div><div class="item-url">cordis.europa.eu</div></div>
+      <div class="cat-item"><div class="item-name">EOSC</div><div class="item-url">eosc-hub.eu</div></div>
+      <div class="cat-item"><div class="item-name">GEANT</div><div class="item-url">geant.org</div></div>
+      <div class="cat-item"><div class="item-name">Indian Geo Platform (ISRO)</div><div class="item-url">bhuvan.nrsc.gov.in</div></div>
+      <div class="cat-item"><div class="item-name">Radiant MLHub</div><div class="item-url">mlhub.earth</div></div>
+      <div class="cat-item"><div class="item-name">Sen4Cap</div><div class="item-url">esa-sen4cap.org</div></div>
+      <div class="cat-item"><div class="item-name">SCENT Project</div><div class="item-url">scent-project.eu</div></div>
+    </div>
+  </div>
+
+  <!-- Initiatives & Programmes -->
+  <div class="cat-group cat-initiative" onclick="this.classList.toggle('open')">
+    <div class="cat-header">
+      <div class="cat-icon">🏛</div>
+      <div class="cat-header-text">
+        <h3>Initiatives &amp; Programmes</h3>
+        <div class="desc">Overarching publicly-funded EO programmes that drive the broader infrastructure landscape</div>
+      </div>
+      <div class="cat-badge">18+</div>
+      <svg class="cat-toggle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+    </div>
+    <div class="cat-grid">
+      <div class="cat-item"><div class="item-name">EU Copernicus Programme</div><div class="item-url">copernicus.eu</div></div>
+      <div class="cat-item"><div class="item-name">e-shape (EuroGEO)</div><div class="item-url">e-shape.eu</div></div>
+      <div class="cat-item"><div class="item-name">ESA Climate Change Initiative</div><div class="item-url">climate.esa.int</div></div>
+      <div class="cat-item"><div class="item-name">NASA EOS</div><div class="item-url">eospso.nasa.gov</div></div>
+      <div class="cat-item"><div class="item-name">ESA Living Planet</div><div class="item-url">esa.int</div></div>
+      <div class="cat-item"><div class="item-name">ESA Digital Twin Earth</div><div class="item-url">esa.int</div></div>
+      <div class="cat-item"><div class="item-name">CBERS Programme</div><div class="item-url">wikipedia.org</div></div>
+      <div class="cat-item"><div class="item-name">Disaster Monitoring Constellation</div><div class="item-url">sstl.co.uk</div></div>
+      <div class="cat-item"><div class="item-name">Envisat Programme</div><div class="item-url">earth.esa.int</div></div>
+      <div class="cat-item"><div class="item-name">GOSAT Project</div><div class="item-url">gosat.nies.go.jp</div></div>
+      <div class="cat-item"><div class="item-name">MetOp Programme</div><div class="item-url">esa.int</div></div>
+      <div class="cat-item"><div class="item-name">EUMETSAT Programme</div><div class="item-url">eumetsat.int</div></div>
+      <div class="cat-item"><div class="item-name">Pangeo</div><div class="item-url">pangeo.io</div></div>
+      <div class="cat-item"><div class="item-name">ESFRI</div><div class="item-url">esfri.eu</div></div>
+      <div class="cat-item"><div class="item-name">Horizon Cloud</div><div class="item-url">h-cloud.eu</div></div>
+      <div class="cat-item"><div class="item-name">WCRP</div><div class="item-url">wcrp-climate.org</div></div>
+      <div class="cat-item"><div class="item-name">WorldPop</div><div class="item-url">worldpop.org</div></div>
+      <div class="cat-item"><div class="item-name">GFDRR</div><div class="item-url">gfdrr.org</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- Limitations & Enablers -->
+<div class="bottom-grid animate-in delay-3">
+  <div class="panel">
+    <h3><span class="emoji">⚠</span> Key User Limitations</h3>
+    <div class="panel-item"><strong>Fragmentation</strong> — Multiple overlapping platforms make discovery and comparison difficult</div>
+    <div class="panel-item"><strong>Steep learning curve</strong> — Time to onboard is often underestimated</div>
+    <div class="panel-item"><strong>Opaque pricing</strong> — Costs and service tiers are hard to compare across providers</div>
+    <div class="panel-item"><strong>Non-customisable workflows</strong> — Processing pipelines often cannot be modified by users</div>
+    <div class="panel-item"><strong>Vendor lock-in</strong> — Migrating code between platforms is costly</div>
+    <div class="panel-item"><strong>No code sharing</strong> — Reuse of algorithms across platforms is not facilitated</div>
+    <div class="panel-item"><strong>Sustainability concerns</strong> — Project-based platforms may disappear after funding ends</div>
+    <div class="panel-item"><strong>IP restrictions</strong> — Commercial code cannot be published to external platforms without security assurances</div>
+  </div>
+  <div class="panel">
+    <h3><span class="emoji">⚡</span> Technological Enablers</h3>
+    <div class="panel-item"><span class="enabler-tag">Cost</span> <strong>NoR Portal</strong> — Compare pricing offers across platforms in one place</div>
+    <div class="panel-item"><span class="enabler-tag">Discovery</span> <strong>GEOSS Yellow Pages</strong> — Catalogue of data providers addressing discoverability</div>
+    <div class="panel-item"><span class="enabler-tag">Interop</span> <strong>OpenEO API</strong> — Prevents vendor lock-in by abstracting across cloud back-ends</div>
+    <div class="panel-item"><span class="enabler-tag">Data</span> <strong>ARCO &amp; Cloud Optimised GeoTIFF</strong> — Maximise EO data usability in the cloud</div>
+    <div class="panel-item"><span class="enabler-tag">Standards</span> <strong>OGC APIs</strong> — New-generation standards for serving geospatial data on the web</div>
+    <div class="panel-item"><span class="enabler-tag">Catalogue</span> <strong>STAC</strong> — Standardised indexing of spatio-temporal asset collections</div>
+  </div>
+</div>
+
+</body>
+</html>
